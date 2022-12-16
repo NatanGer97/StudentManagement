@@ -18,16 +18,32 @@ public class StudentsController {
     private StudentService studentService;
 
 
-    @GetMapping("")
+    /*@GetMapping("")
     public ResponseEntity<?> getAllStudents()
     {
         return new ResponseEntity<>(studentService.all(), HttpStatus.OK);
+    }*/
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllStudents(@RequestParam(defaultValue = "0") Integer pageNo,
+                                            @RequestParam(defaultValue = "10") Integer pageSize,
+                                            @RequestParam(defaultValue = "Id") eSortOrder sortOrderField,
+                                            @RequestParam(defaultValue = "false") Boolean isDescending)
+    {
+        return new ResponseEntity<>(studentService.all(pageNo, pageSize,sortOrderField,isDescending), HttpStatus.OK);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getOneStudent(@PathVariable Long id)
     {
         return new ResponseEntity<>(studentService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/highSat")
+    public ResponseEntity<?> getStudentWithSatHigherThan(@RequestParam Integer sat)
+    {
+        return new ResponseEntity<>(studentService.getStudentWithSatHigherThan(sat), HttpStatus.OK);
     }
 
     @PostMapping("")
