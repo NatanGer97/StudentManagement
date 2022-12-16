@@ -74,4 +74,6 @@ public class StudentOut {
     public String getProfilePicture() {
         return profilepicture;
     }
+
+
 }
