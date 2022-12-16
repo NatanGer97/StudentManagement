@@ -15,44 +15,48 @@ public class StudentsController {
 
 
     @Autowired
-    StudentService studentService;
+    private StudentService studentService;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+
+    @GetMapping("")
     public ResponseEntity<?> getAllStudents()
     {
         return new ResponseEntity<>(studentService.all(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public ResponseEntity<?> getOneStudent(@PathVariable Long id)
     {
         return new ResponseEntity<>(studentService.findById(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @PostMapping("")
     public ResponseEntity<?> insertStudent(@RequestBody StudentIn studentIn)
     {
         Student student = studentIn.toStudent();
         student = studentService.save(student);
-        return new ResponseEntity<>(student, HttpStatus.OK);
+        return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateStudent(@PathVariable Long id, @RequestBody StudentIn student)
     {
         Optional<Student> dbStudent = studentService.findById(id);
+        // TODO:  handle not found
         if (dbStudent.isEmpty()) throw new RuntimeException("Student with id: " + id + " not found");
         student.updateStudent(dbStudent.get());
         Student updatedStudent = studentService.save(dbStudent.get());
         return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteStudent(@PathVariable Long id)
     {
         Optional<Student> dbStudent = studentService.findById(id);
+        // TODO:  handle not found
         if (dbStudent.isEmpty()) throw new RuntimeException("Student with id: " + id + " not found");
         studentService.delete(dbStudent.get());
+
         return new ResponseEntity<>("DELETED", HttpStatus.OK);
     }
 }
