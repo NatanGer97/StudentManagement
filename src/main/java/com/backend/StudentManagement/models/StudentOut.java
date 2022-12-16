@@ -38,12 +38,10 @@ public class StudentOut {
     private String phone;
     private String profilepicture;
 
-    public Integer getSatScore() {
-        return satscore;
-    }
+    private Double avgscore;
 
-    public Double getGraduationScore() {
-        return graduationscore;
+    public Long getId() {
+        return id;
     }
 
     public Date getCreatedat() {
@@ -58,21 +56,41 @@ public class StudentOut {
         return birthdate;
     }
 
-
-    public Long getId() {
-        return id;
+    public Integer getSatscore() {
+        return satscore;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Double getGraduationscore() {
+        return graduationscore;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public String getProfilePicture() {
+    public String getProfilepicture() {
         return profilepicture;
+    }
+
+    public Double getAvgscore() {
+        return avgscore;
+    }
+
+    public static StudentOut of(Student student/*, AWSService awsService*/) {
+        StudentOut res = new StudentOut();
+        res.id = student.getId();
+        res.createdat = student.getCreatedAt();
+        res.fullname = student.getFullname();
+        res.birthdate = student.getBirthDate();
+        res.satscore = student.getSatScore();
+        res.graduationscore = student.getGraduationScore();
+        res.phone = student.getPhone();
+        res.avgscore = student.getStudentGrades().stream()
+                .mapToDouble(StudentGrade::getCourseScore)
+                .average().orElse(0);
+        /*res.profilepicture = awsService.generateLink(student.getProfilePicture());*/
+
+        return res;
     }
 
 

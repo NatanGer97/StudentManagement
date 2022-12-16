@@ -37,7 +37,15 @@ public class StudentsController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getOneStudent(@PathVariable Long id)
     {
-        return new ResponseEntity<>(studentService.findById(id), HttpStatus.OK);
+        Optional<Student> student = studentService.findById(id);
+        if (student.isPresent())
+        {
+            return new ResponseEntity<>(StudentOut.of(student.get()), HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/highSat")

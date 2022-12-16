@@ -42,6 +42,17 @@ public class Student implements Serializable {
     @Length(max = 500)
     private String profilePicture;
 
+    @OneToMany(mappedBy = "student", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Collection<StudentGrade> studentGrades = new ArrayList<>();
+
+    public Collection<StudentGrade> getStudentGrades() {
+        return studentGrades;
+    }
+
+    public void setStudentGrades(Collection<StudentGrade> studentGrades) {
+        this.studentGrades = studentGrades;
+    }
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("createdAt")
     public LocalDateTime calcCreatedAt() {
@@ -127,6 +138,7 @@ public class Student implements Serializable {
         private @Min(30) @Max(110) Double graduationScore;
         private @Length(max = 20) String phone;
         private @Length(max = 500) String profilePicture;
+
 
         private StudentBuilder() {
         }

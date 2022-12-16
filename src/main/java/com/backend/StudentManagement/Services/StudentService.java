@@ -8,6 +8,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 @Service
 public class StudentService {
@@ -25,17 +26,18 @@ public class StudentService {
         PageRequest request = PageRequest.of(pageNumber, pageSize,
                 isDescending ? Sort.by(sortOrderField.getValue()).descending() : Sort.by(sortOrderField.getValue()).ascending());
         Page<Student> studentPage = studentRepository.findAll(request);
-        logger.info("Total pages: " + studentPage.getTotalPages());
-        logger.info("Total elements: " + studentPage.getTotalElements());
-        logger.info("Page number: " + studentPage.getNumber());
+        List<StudentOut> studentOutList = studentPage.getContent().stream()
+                .map(StudentOut::of).collect(Collectors.toList());
+
         Pagination pagination = Pagination.of(studentPage.getNumber(), studentPage.getTotalPages());
-        PaginationAndData paginationAndData = PaginationAndData.of(pagination, studentPage.getContent());
-        return paginationAndData;
+
+        return PaginationAndData.of(pagination, studentOutList);
 
     }
 
     public Optional<Student> findById(Long id) {
-        return studentRepository.findById(id);
+      return studentRepository.findById(id);
+
     }
 
 
