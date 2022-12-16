@@ -17,6 +17,8 @@ public class StudentService {
 
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    AwsService awsService;
 
     public Iterable<Student> all() {
         return studentRepository.findAll();
@@ -27,7 +29,7 @@ public class StudentService {
                 isDescending ? Sort.by(sortOrderField.getValue()).descending() : Sort.by(sortOrderField.getValue()).ascending());
         Page<Student> studentPage = studentRepository.findAll(request);
         List<StudentOut> studentOutList = studentPage.getContent().stream()
-                .map(StudentOut::of).collect(Collectors.toList());
+                .map(student -> StudentOut.of(student, awsService)).collect(Collectors.toList());
 
         Pagination pagination = Pagination.of(studentPage.getNumber(), studentPage.getTotalPages());
 
@@ -36,7 +38,7 @@ public class StudentService {
     }
 
     public Optional<Student> findById(Long id) {
-      return studentRepository.findById(id);
+        return studentRepository.findById(id);
 
     }
 

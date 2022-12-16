@@ -1,8 +1,10 @@
 package com.backend.StudentManagement.models;
 
+import com.backend.StudentManagement.Services.*;
 import com.backend.StudentManagement.util.*;
 import com.fasterxml.jackson.annotation.*;
 import org.joda.time.*;
+import org.springframework.beans.factory.annotation.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -11,6 +13,8 @@ import java.util.*;
 @SqlResultSetMapping(name = "StudentOut")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentOut {
+
+
 
     @Id
     private Long id;
@@ -76,7 +80,7 @@ public class StudentOut {
         return avgscore;
     }
 
-    public static StudentOut of(Student student/*, AWSService awsService*/) {
+    public static StudentOut of(Student student) {
         StudentOut res = new StudentOut();
         res.id = student.getId();
         res.createdat = student.getCreatedAt();
@@ -88,7 +92,23 @@ public class StudentOut {
         res.avgscore = student.getStudentGrades().stream()
                 .mapToDouble(StudentGrade::getCourseScore)
                 .average().orElse(0);
-        /*res.profilepicture = awsService.generateLink(student.getProfilePicture());*/
+
+        return res;
+    }
+
+    public static StudentOut of(Student student, AwsService awsService) {
+        StudentOut res = new StudentOut();
+        res.id = student.getId();
+        res.createdat = student.getCreatedAt();
+        res.fullname = student.getFullname();
+        res.birthdate = student.getBirthDate();
+        res.satscore = student.getSatScore();
+        res.graduationscore = student.getGraduationScore();
+        res.phone = student.getPhone();
+        res.avgscore = student.getStudentGrades().stream()
+                .mapToDouble(StudentGrade::getCourseScore)
+                .average().orElse(0);
+        res.profilepicture = awsService.generateLink(student.getProfilePicture());
 
         return res;
     }

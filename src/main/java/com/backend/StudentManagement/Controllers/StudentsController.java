@@ -5,6 +5,7 @@ import com.backend.StudentManagement.models.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.*;
 
 import javax.annotation.*;
 import java.util.*;
@@ -16,6 +17,9 @@ public class StudentsController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private AwsService awsService;
 
 
     /*@GetMapping("")
@@ -82,5 +86,21 @@ public class StudentsController {
         studentService.delete(dbStudent.get());
 
         return new ResponseEntity<>("DELETED", HttpStatus.OK);
+    }
+
+   @PutMapping("/{id}/image/upload")
+    public ResponseEntity<?> uploadStudentImage(@PathVariable Long id,  @RequestParam("image") MultipartFile image)
+    {
+        Optional<Student> dbStudent = studentService.findById(id);
+        //todo: handle not found
+        if (dbStudent.isEmpty()) throw new RuntimeException("Student with id: " + id + " not found");
+
+        String bucketPath = "studentManagement/natan/student-" +  id + ".png" ;
+
+        awsService.putInBucket(image, bucketPath);
+        dbStudent.get().setProfilePicture(bucketPath);
+
+        Student updatedStudent = studentService.save(dbStudent.get());
+        return new ResponseEntity<>(StudentOut.of(updatedStudent, awsService) , HttpStatus.OK);
     }
 }
