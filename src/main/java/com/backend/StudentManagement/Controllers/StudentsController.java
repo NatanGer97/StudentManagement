@@ -106,6 +106,13 @@ public class StudentsController {
 
     @PostMapping("/sendEmailToAll")
     public ResponseEntity<?> sendEmailToAll(@RequestBody String msg) {
+        studentService.sendEmailToAllStudents(msg);
+        return new ResponseEntity<>("Sending...", HttpStatus.OK);
+
+    }
+
+    @PostMapping("/sendEmailToAll-ms")
+    public ResponseEntity<?> sendEmailToAll_ms(@RequestBody String msg) {
         studentService.sendEmailToAll(msg);
 //        studentService.sendEmailToAllStudents(msg);
         return new ResponseEntity<>("Sending...", HttpStatus.OK);
