@@ -3,7 +3,7 @@ services:
   appserver:
     container_name: server
     hostname: localhost
-    image: natanger97/student-management:002
+    image: natanger97/student-management:003
     #    image: student-management
 
     ports:
