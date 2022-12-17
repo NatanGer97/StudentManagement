@@ -2,6 +2,7 @@ package com.backend.StudentManagement.Services;
 
 import com.backend.StudentManagement.Repos.*;
 import com.backend.StudentManagement.models.*;
+import org.apache.commons.collections4.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
@@ -64,6 +65,28 @@ public class StudentService {
     public void sendEmail(EmailDetails emailDetails) {
         new Thread(() -> {
             emailService.sendSimpleMail(emailDetails);
+        }).start();
+    }
+
+    /**
+     * sends email to all students in async manner
+     */
+    public void sendEmailToAllStudents() {
+         String htmlResponse = "<htmlResponse><head>" +
+                "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n" +
+                "<head>" + "<body class=container><h6 class=text-center> %s </h6></body></htmlResponse>";
+        new Thread(() -> {
+            List<String> emails = IteratorUtils.toList(studentRepository.findAll().iterator())
+                    .parallelStream()
+                    .map(student -> student.getEmail())
+                    .filter(email -> email != null && !email.isEmpty())
+                    .collect(Collectors.toList());
+
+            emails.forEach(email -> {
+                emailService.sendSimpleMail(EmailDetails.of(email,
+                        "Hello", "Hello from the other side"));
+            });
+
         }).start();
     }
 

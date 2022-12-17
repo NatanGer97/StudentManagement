@@ -102,6 +102,12 @@ public class StudentsController {
         studentService.sendEmail(email);
         return new ResponseEntity<>("Sending...", HttpStatus.OK);
 
+    }
+
+    @PostMapping("/sendEmailToAll")
+    public ResponseEntity<?> sendEmailToAll() {
+        studentService.sendEmailToAllStudents();
+        return new ResponseEntity<>("Sending...", HttpStatus.OK);
 
     }
 }
