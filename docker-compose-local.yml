@@ -3,17 +3,24 @@ services:
   appserver:
     container_name: server
     hostname: localhost
-    image:  natanger97/student-management:002
-#    image: student-management
+    image: natanger97/student-management:002
+    #    image: student-management
 
     ports:
       - "8080:8080"
+  ms-email:
+    container_name: microservice-email
+    hostname: localhost
+    image: natanger97/email-ms:001
+    ports:
+      - "8081:8081"
+    privileged: true
   postgres:
     image: postgres
     environment:
       POSTGRES_PASSWORD: postgres
     ports:
-    - 5432:5432
+      - 5432:5432
     volumes:
       - ./postgresdata:/var/lib/postgresql/data
     privileged: true

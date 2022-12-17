@@ -34,7 +34,6 @@ public class StudentService {
     String EMAIL_MS_URL;
 
     private RestTemplate restTemplate = new RestTemplateBuilder().build();
-
     public Iterable<Student> all() {
         return studentRepository.findAll();
     }
