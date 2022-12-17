@@ -14,8 +14,6 @@ import java.util.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentOut {
 
-
-
     @Id
     private Long id;
 
@@ -40,6 +38,7 @@ public class StudentOut {
     private Double graduationscore;
 
     private String phone;
+    private String email;
     private String profilepicture;
 
     private Double avgscore;
@@ -68,6 +67,10 @@ public class StudentOut {
         return graduationscore;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -82,6 +85,7 @@ public class StudentOut {
 
     public static StudentOut of(Student student) {
         StudentOut res = new StudentOut();
+
         res.id = student.getId();
         res.createdat = student.getCreatedAt();
         res.fullname = student.getFullname();
@@ -89,6 +93,7 @@ public class StudentOut {
         res.satscore = student.getSatScore();
         res.graduationscore = student.getGraduationScore();
         res.phone = student.getPhone();
+        res.email = student.getEmail();
         res.avgscore = student.getStudentGrades().stream()
                 .mapToDouble(StudentGrade::getCourseScore)
                 .average().orElse(0);
@@ -97,20 +102,21 @@ public class StudentOut {
     }
 
     public static StudentOut of(Student student, AwsService awsService) {
-        StudentOut res = new StudentOut();
-        res.id = student.getId();
-        res.createdat = student.getCreatedAt();
-        res.fullname = student.getFullname();
-        res.birthdate = student.getBirthDate();
-        res.satscore = student.getSatScore();
-        res.graduationscore = student.getGraduationScore();
-        res.phone = student.getPhone();
-        res.avgscore = student.getStudentGrades().stream()
+        StudentOut responseStudent = new StudentOut();
+        responseStudent.id = student.getId();
+        responseStudent.createdat = student.getCreatedAt();
+        responseStudent.fullname = student.getFullname();
+        responseStudent.birthdate = student.getBirthDate();
+        responseStudent.satscore = student.getSatScore();
+        responseStudent.graduationscore = student.getGraduationScore();
+        responseStudent.phone = student.getPhone();
+        responseStudent.avgscore = student.getStudentGrades().stream()
                 .mapToDouble(StudentGrade::getCourseScore)
                 .average().orElse(0);
-        res.profilepicture = awsService.generateLink(student.getProfilePicture());
+        responseStudent.email = student.getEmail();
+        responseStudent.profilepicture = awsService.generateLink(student.getProfilePicture());
 
-        return res;
+        return responseStudent;
     }
 
 

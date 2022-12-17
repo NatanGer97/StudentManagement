@@ -7,6 +7,7 @@ import org.joda.time.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.io.*;
 import java.util.*;
@@ -17,6 +18,17 @@ public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+
+    @Email
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @NotNull
     @Column(nullable = false, updatable = false)
@@ -138,6 +150,7 @@ public class Student implements Serializable {
         private @Min(30) @Max(110) Double graduationScore;
         private @Length(max = 20) String phone;
         private @Length(max = 500) String profilePicture;
+        private @Email String email;
 
 
         private StudentBuilder() {
@@ -159,6 +172,11 @@ public class Student implements Serializable {
 
         public StudentBuilder fullname(String fullname) {
             this.fullname = fullname;
+            return this;
+        }
+
+        public StudentBuilder email(String email) {
+            this.email = email;
             return this;
         }
 
@@ -197,6 +215,7 @@ public class Student implements Serializable {
             student.id = this.id;
             student.graduationScore = this.graduationScore;
             student.profilePicture = this.profilePicture;
+            student.email = this.email;
             return student;
         }
     }

@@ -19,6 +19,8 @@ public class StudentService {
     StudentRepository studentRepository;
     @Autowired
     AwsService awsService;
+    @Autowired
+    private EmailServiceImpl emailService;
 
     public Iterable<Student> all() {
         return studentRepository.findAll();
@@ -54,4 +56,16 @@ public class StudentService {
     public List<Student> getStudentWithSatHigherThan(Integer sat) {
         return studentRepository.findAllBySatScoreGreaterThan(sat);
     }
+
+    /**
+     *  sends email to student with the given id in async manner
+     * @param emailDetails the email details
+     */
+    public void sendEmail(EmailDetails emailDetails) {
+        new Thread(() -> {
+            emailService.sendSimpleMail(emailDetails);
+        }).start();
+    }
+
+
 }

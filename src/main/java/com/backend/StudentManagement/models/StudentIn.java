@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.*;
 import org.joda.time.*;
 
 import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
 import java.io.*;
 
 import static com.backend.StudentManagement.models.Student.StudentBuilder.aStudent;
@@ -26,6 +27,17 @@ public class StudentIn {
     @Max(110)
     private Double graduationScore;
 
+    @Email
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Length(max = 20)
     private String phone;
 
@@ -35,6 +47,7 @@ public class StudentIn {
                 .createdAt(Dates.nowUTC())
                 .satScore(satScore).graduationScore(graduationScore)
                 .phone(phone)
+                .email(email)
                 .build();
     }
 
@@ -44,6 +57,7 @@ public class StudentIn {
         student.setSatScore(satScore);
         student.setGraduationScore(graduationScore);
         student.setPhone(phone);
+        student.setEmail(email);
     }
 
     public String getFullname() {
